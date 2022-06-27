@@ -4,8 +4,8 @@ import Link from "next/link";
 import Account from "../components/Account";
 import NativeCurrencyBalance from "../components/NativeCurrencyBalance";
 import TokenBalance from "../components/TokenBalance";
-import USLibrary from "../components/USLibrary";
-import { ALBT_TOKEN_ADDRESS, US_ELECTION_ADDRESS } from "../constants";
+import PontisLibrary from "../components/PontisLibrary";
+import { PHO_TOKEN_ADDRESS, PONTIS_ADDRESS } from "../constants";
 import useEagerConnect from "../hooks/useEagerConnect";
 
 function Home() {
@@ -44,8 +44,8 @@ function Home() {
           <section>
             <NativeCurrencyBalance />
 
-            <TokenBalance tokenAddress={ALBT_TOKEN_ADDRESS} symbol="ALBT" />
-            <USLibrary contractAddress={US_ELECTION_ADDRESS} />
+            <TokenBalance tokenAddress={PHO_TOKEN_ADDRESS} symbol="PHO" />
+            <PontisLibrary contractAddress={PONTIS_ADDRESS} phoboCoinAddress={PHO_TOKEN_ADDRESS} />
           </section>
         )}
       </main>
