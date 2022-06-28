@@ -1,8 +1,8 @@
-import type { Web3Provider } from "@ethersproject/providers";
+import { Provider, Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { PHO_TOKEN_ADDRESS } from "../constants";
+import { metaMaskNetworks, PHO_TOKEN_ADDRESS } from "../constants";
 import usePhoboCoinContract from "../hooks/usePhoboCoinContract";
 import usePontisContract from "../hooks/usePontisContract"; 
 
@@ -25,16 +25,22 @@ const PontisLibrary = ({ contractAddress, phoboCoinAddress }: PontisContractType
     const currentBalance = 333;
   }
 
+  // TODO - extract logic to a separate component???
+  PontisContract.on('Lock', (coinAddress, amount, fee, tx) => {
+    console.log(fee);
+  });
+
   const amountToBridgeInput = (input) => {
     setAmountToBridge(input.target.value)
   }
 
   const submitTransaction = async () => {
-    await PhoboCoinContract.increaseAllowance(PontisContract.address, amountToBridge);
+    await PhoboCoinContract.approve(PontisContract.address, amountToBridge); 
 
     const tx = await PontisContract.lock(PHO_TOKEN_ADDRESS, amountToBridge, {
       value:    ethers.utils.parseEther('0.0000000000000001'),
-      gasLimit: ethers.utils.parseEther('0.0000005')
+      gasLimit: 85000,
+      //gasPrice: 1000000000 
     }); 
 
     await tx.wait();
@@ -48,10 +54,25 @@ const PontisLibrary = ({ contractAddress, phoboCoinAddress }: PontisContractType
   return (
     <div className="results-form">
     <form>
+      <div>
+        Native Chain: <span>{metaMaskNetworks.get(parseInt(window.ethereum.chainId))}</span> 
+      </div>
       <label>
         Amount to bridge: 
         <input onChange={amountToBridgeInput} value={amountToBridge} type="number" name="amountToBridge" />
       </label>
+      <div>
+        <label>Target Chain:</label>
+        {/* TODO - drop-down component */}
+        <select>
+          {
+            Array
+              .from(metaMaskNetworks.keys())
+              .filter(key => key != parseInt(window.ethereum.chainId))
+              .map(key => <option value={key}>{metaMaskNetworks.get(key)}</option>)
+          }
+        </select>
+      </div>
     </form>
     <div className="button-wrapper">
       <button onClick={submitTransaction}>Submit Transaction</button>
