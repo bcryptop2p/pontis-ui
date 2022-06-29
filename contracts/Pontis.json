@@ -1,4 +1,4 @@
-[
+ [
     {
       "anonymous": false,
       "inputs": [
@@ -29,8 +29,20 @@
       "inputs": [
         {
           "indexed": false,
+          "internalType": "uint8",
+          "name": "targetChain",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
           "internalType": "address",
           "name": "token",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "receiver",
           "type": "address"
         },
         {
@@ -143,6 +155,11 @@
     },
     {
       "inputs": [
+        {
+          "internalType": "uint8",
+          "name": "_targetChain",
+          "type": "uint8"
+        },
         {
           "internalType": "address",
           "name": "_nativeToken",

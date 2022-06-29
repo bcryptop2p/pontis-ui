@@ -12,10 +12,11 @@ type PontisContractType = {
 };
 
 const PontisLibrary = ({ contractAddress, phoboCoinAddress }: PontisContractType) => {
-  const { account, library } = useWeb3React<Web3Provider>();
+  const { chainId, account, library } = useWeb3React<Web3Provider>();
   const PontisContract = usePontisContract(contractAddress);
   const PhoboCoinContract = usePhoboCoinContract(phoboCoinAddress);
   const [amountToBridge, setAmountToBridge] = useState<number | undefined>();
+  const [targetChainId, setTargetChainId] = useState<number>();
 
   useEffect(() => {
     getCurrentBalance();
@@ -25,19 +26,18 @@ const PontisLibrary = ({ contractAddress, phoboCoinAddress }: PontisContractType
     const currentBalance = 333;
   }
 
-  // TODO - extract logic to a separate component???
-  PontisContract.on('Lock', (coinAddress, amount, fee, tx) => {
-    console.log(fee);
-  });
-
   const amountToBridgeInput = (input) => {
     setAmountToBridge(input.target.value)
+  }
+
+  const targetChainIdInput = (input) => {
+    setTargetChainId(input.target.value)
   }
 
   const submitTransaction = async () => {
     await PhoboCoinContract.approve(PontisContract.address, amountToBridge); 
 
-    const tx = await PontisContract.lock(PHO_TOKEN_ADDRESS, amountToBridge, {
+    const tx = await PontisContract.lock(targetChainId, PHO_TOKEN_ADDRESS, amountToBridge, {
       value:    ethers.utils.parseEther('0.0000000000000001'),
       gasLimit: 85000,
       //gasPrice: 1000000000 
@@ -55,7 +55,7 @@ const PontisLibrary = ({ contractAddress, phoboCoinAddress }: PontisContractType
     <div className="results-form">
     <form>
       <div>
-        Native Chain: <span>{metaMaskNetworks.get(parseInt(window.ethereum.chainId))}</span> 
+        Native Chain: <span>{metaMaskNetworks.get(chainId)}</span> 
       </div>
       <label>
         Amount to bridge: 
@@ -64,12 +64,12 @@ const PontisLibrary = ({ contractAddress, phoboCoinAddress }: PontisContractType
       <div>
         <label>Target Chain:</label>
         {/* TODO - drop-down component */}
-        <select>
+        <select onChange={targetChainIdInput} value={targetChainId} name="targetChainId">
           {
             Array
               .from(metaMaskNetworks.keys())
-              .filter(key => key != parseInt(window.ethereum.chainId))
-              .map(key => <option value={key}>{metaMaskNetworks.get(key)}</option>)
+              .filter(key => key != chainId)
+              .map(key => <option key={key} value={key}>{metaMaskNetworks.get(key)}</option>)
           }
         </select>
       </div>

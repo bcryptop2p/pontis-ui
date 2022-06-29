@@ -5,6 +5,7 @@ import Account from "../components/Account";
 import NativeCurrencyBalance from "../components/NativeCurrencyBalance";
 import TokenBalance from "../components/TokenBalance";
 import PontisLibrary from "../components/PontisLibrary";
+import PendingClaims from "../components/PendingClaims";
 import { PHO_TOKEN_ADDRESS, PONTIS_ADDRESS } from "../constants";
 import useEagerConnect from "../hooks/useEagerConnect";
 
@@ -45,6 +46,7 @@ function Home() {
             <NativeCurrencyBalance />
 
             <TokenBalance tokenAddress={PHO_TOKEN_ADDRESS} symbol="PHO" />
+            <PendingClaims contractAddress={PONTIS_ADDRESS} phoboCoinAddress={PHO_TOKEN_ADDRESS} />
             <PontisLibrary contractAddress={PONTIS_ADDRESS} phoboCoinAddress={PHO_TOKEN_ADDRESS} />
           </section>
         )}
