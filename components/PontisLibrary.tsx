@@ -2,9 +2,10 @@ import { Provider, Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { metaMaskNetworks, PHO_TOKEN_ADDRESS } from "../constants";
+import { metaMaskNetworks, pendingClaims, PHO_TOKEN_ADDRESS } from "../constants";
 import usePhoboCoinContract from "../hooks/usePhoboCoinContract";
 import usePontisContract from "../hooks/usePontisContract"; 
+import { TokenClaim } from "../models/token-claim";
 
 type PontisContractType = {
   contractAddress: string;
@@ -21,6 +22,25 @@ const PontisLibrary = ({ contractAddress, phoboCoinAddress }: PontisContractType
   useEffect(() => {
     getCurrentBalance();
   },[])
+
+  useEffect(() => {
+    PontisContract.on('Lock', onPontisLock);
+
+    return () => { 
+      PontisContract.off('Lock', onPontisLock);
+    };
+  },[chainId, account])
+  
+  const onPontisLock = (targetChainId, coinAddress, receiverAddress, amount, fee, tx) => {
+    let claims = pendingClaims.get(receiverAddress);
+    if (!claims) {
+      claims = [];
+      pendingClaims.set(receiverAddress, claims);
+    }
+
+    // TODO - use BigNumber amount???
+    claims.push(new TokenClaim(targetChainId, coinAddress, amount.toNumber()));
+  }
 
   const getCurrentBalance = async () => {
     const currentBalance = 333;
@@ -63,7 +83,6 @@ const PontisLibrary = ({ contractAddress, phoboCoinAddress }: PontisContractType
       </label>
       <div>
         <label>Target Chain:</label>
-        {/* TODO - drop-down component */}
         <select onChange={targetChainIdInput} value={targetChainId} name="targetChainId">
           {
             Array

@@ -23,10 +23,4 @@
   export const PONTIS_ADDRESS = "0x884a33dA3Fd4164b1c3a9FB0509b7ba75eF2F95b";
   
   // TODO - move to local storage!!!
-  export const pendingClaims: Map<string, TokenClaim[]> = new Map<string, TokenClaim[]>([
-    ["0xBA62fbfBBF666599e26e14Ba457DE354A04821CE", [
-      new TokenClaim(3, PHO_TOKEN_ADDRESS, 3450000),
-      new TokenClaim(4, PHO_TOKEN_ADDRESS, 9999000),
-      new TokenClaim(4, PHO_TOKEN_ADDRESS, 56000000),
-    ]]
-  ]);
+  export var pendingClaims: Map<string, TokenClaim[]> = new Map<string, TokenClaim[]>();
