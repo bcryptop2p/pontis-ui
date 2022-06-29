@@ -2,16 +2,11 @@ import { Provider, Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { metaMaskNetworks, pendingClaims, PHO_TOKEN_ADDRESS } from "../constants";
+import { metaMaskNetworks, pendingClaims } from "../constants";
 import usePhoboCoinContract from "../hooks/usePhoboCoinContract";
 import usePontisContract from "../hooks/usePontisContract"; 
 
-type PontisContractType = {
-  contractAddress: string;
-  phoboCoinAddress: string;
-};
-
-const PendingClaims = ({ contractAddress, phoboCoinAddress }: PontisContractType) => {
+const PendingClaims = () => {
   const { chainId, account, library } = useWeb3React<Web3Provider>();
   // const PontisContract = usePontisContract(contractAddress);
   // const PhoboCoinContract = usePhoboCoinContract(phoboCoinAddress);

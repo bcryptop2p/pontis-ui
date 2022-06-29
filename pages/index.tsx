@@ -6,11 +6,11 @@ import NativeCurrencyBalance from "../components/NativeCurrencyBalance";
 import TokenBalance from "../components/TokenBalance";
 import PontisLibrary from "../components/PontisLibrary";
 import PendingClaims from "../components/PendingClaims";
-import { PHO_TOKEN_ADDRESS, PONTIS_ADDRESS } from "../constants";
+import { phoTokenAddresses } from "../constants";
 import useEagerConnect from "../hooks/useEagerConnect";
 
 function Home() {
-  const { account, library } = useWeb3React();
+  const { account, library, chainId } = useWeb3React();
 
   const triedToEagerConnect = useEagerConnect();
 
@@ -45,9 +45,9 @@ function Home() {
           <section>
             <NativeCurrencyBalance />
 
-            <TokenBalance tokenAddress={PHO_TOKEN_ADDRESS} symbol="PHO" />
-            <PendingClaims contractAddress={PONTIS_ADDRESS} phoboCoinAddress={PHO_TOKEN_ADDRESS} />
-            <PontisLibrary contractAddress={PONTIS_ADDRESS} phoboCoinAddress={PHO_TOKEN_ADDRESS} />
+            <TokenBalance tokenAddress={phoTokenAddresses.get(chainId)} symbol="PHO" />
+            <PendingClaims />
+            <PontisLibrary />
           </section>
         )}
       </main>
