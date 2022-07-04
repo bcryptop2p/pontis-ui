@@ -16,17 +16,20 @@
   ]);
 
   // Network chain ids
-  export const supportedMetamaskNetworks = [1, 3, 4, 5, 42];
+  export const supportedMetamaskNetworks = [1, 3, 4]; //, 5, 42];
 
-  // todo env variables - dotenv package  
-  export const PHO_TOKEN_ADDRESS = "0xD43DaA155e54C103B10f9588179339651Cb5d0fF";
-  export const PONTIS_ADDRESS = "0x884a33dA3Fd4164b1c3a9FB0509b7ba75eF2F95b";
+  // todo env variables - dotenv package
+  export const phoTokenAddresses: Map<number, string> = new Map<number, string>([
+    [1, "naaaah, too expensive!!!"], // Ethereum
+    [3, "0xD43DaA155e54C103B10f9588179339651Cb5d0fF"], // Ropsten
+    [4, "0xcFDb1BE3D7afbcdf99dD54dAE43819Ed686B98B8"]  // Rinkeby
+  ]);
+
+  export const pontisAddresses: Map<number, string> = new Map<number, string>([
+    [1, "nope"], // Ethereum
+    [3, "0x884a33dA3Fd4164b1c3a9FB0509b7ba75eF2F95b"], // Ropsten
+    [4, "0x0f5cf0f68b8F94dB239bc43Cc18a35fe83243541"]  // Rinkeby
+  ]);
   
   // TODO - move to local storage!!!
-  export const pendingClaims: Map<string, TokenClaim[]> = new Map<string, TokenClaim[]>([
-    ["0xBA62fbfBBF666599e26e14Ba457DE354A04821CE", [
-      new TokenClaim(3, PHO_TOKEN_ADDRESS, 3450000),
-      new TokenClaim(4, PHO_TOKEN_ADDRESS, 9999000),
-      new TokenClaim(4, PHO_TOKEN_ADDRESS, 56000000),
-    ]]
-  ]);
+  export var pendingClaims: Map<string, TokenClaim[]> = new Map<string, TokenClaim[]>();

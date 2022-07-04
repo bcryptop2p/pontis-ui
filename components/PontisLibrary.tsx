@@ -2,25 +2,42 @@ import { Provider, Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { metaMaskNetworks, PHO_TOKEN_ADDRESS } from "../constants";
+import { metaMaskNetworks, pendingClaims, phoTokenAddresses } from "../constants";
 import usePhoboCoinContract from "../hooks/usePhoboCoinContract";
 import usePontisContract from "../hooks/usePontisContract"; 
+import { TokenClaim } from "../models/token-claim";
 
-type PontisContractType = {
-  contractAddress: string;
-  phoboCoinAddress: string;
-};
-
-const PontisLibrary = ({ contractAddress, phoboCoinAddress }: PontisContractType) => {
+const PontisLibrary = () => {
   const { chainId, account, library } = useWeb3React<Web3Provider>();
-  const PontisContract = usePontisContract(contractAddress);
-  const PhoboCoinContract = usePhoboCoinContract(phoboCoinAddress);
+  const PontisContract = usePontisContract();
+  const PhoboCoinContract = usePhoboCoinContract();
   const [amountToBridge, setAmountToBridge] = useState<number | undefined>();
   const [targetChainId, setTargetChainId] = useState<number>();
 
   useEffect(() => {
     getCurrentBalance();
   },[])
+
+  useEffect(() => {
+    PontisContract.on('Lock', onPontisLock);
+
+    // TODO - find a better solution - currently it is possible for the user to switch network before 
+    // the transaction is complete which in turn will fail to handle the Lock event!!!
+    return () => { 
+      PontisContract.off('Lock', onPontisLock);
+    };
+  },[chainId, account])
+  
+  const onPontisLock = (targetChainId, coinAddress, receiverAddress, amount, fee, tx) => {
+    let claims = pendingClaims.get(receiverAddress);
+    if (!claims) {
+      claims = [];
+      pendingClaims.set(receiverAddress, claims);
+    }
+
+    // TODO - use BigNumber amount???
+    claims.push(new TokenClaim(targetChainId, coinAddress, amount.toNumber()));
+  }
 
   const getCurrentBalance = async () => {
     const currentBalance = 333;
@@ -37,7 +54,7 @@ const PontisLibrary = ({ contractAddress, phoboCoinAddress }: PontisContractType
   const submitTransaction = async () => {
     await PhoboCoinContract.approve(PontisContract.address, amountToBridge); 
 
-    const tx = await PontisContract.lock(targetChainId, PHO_TOKEN_ADDRESS, amountToBridge, {
+    const tx = await PontisContract.lock(targetChainId, phoTokenAddresses.get(chainId), amountToBridge, {
       value:    ethers.utils.parseEther('0.0000000000000001'),
       gasLimit: 85000,
       //gasPrice: 1000000000 
@@ -63,7 +80,6 @@ const PontisLibrary = ({ contractAddress, phoboCoinAddress }: PontisContractType
       </label>
       <div>
         <label>Target Chain:</label>
-        {/* TODO - drop-down component */}
         <select onChange={targetChainIdInput} value={targetChainId} name="targetChainId">
           {
             Array
