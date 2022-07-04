@@ -11,7 +11,7 @@ const PontisLibrary = () => {
   const { chainId, account, library } = useWeb3React<Web3Provider>();
   const PontisContract = usePontisContract();
   const PhoboCoinContract = usePhoboCoinContract();
-  const [amountToBridge, setAmountToBridge] = useState<number | undefined>();
+  const [amountToBridge, setAmountToBridge] = useState<number | undefined>(0);
   const [targetChainId, setTargetChainId] = useState<number>();
 
   useEffect(() => {

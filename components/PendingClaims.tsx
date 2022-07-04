@@ -2,18 +2,30 @@ import { Provider, Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { metaMaskNetworks, pendingClaims } from "../constants";
+import { metaMaskNetworks, pendingClaims, phoTokenAddresses } from "../constants";
 import usePhoboCoinContract from "../hooks/usePhoboCoinContract";
 import usePontisContract from "../hooks/usePontisContract"; 
+import { TokenClaim } from "../models/token-claim";
 
 const PendingClaims = () => {
   const { chainId, account, library } = useWeb3React<Web3Provider>();
-  // const PontisContract = usePontisContract(contractAddress);
-  // const PhoboCoinContract = usePhoboCoinContract(phoboCoinAddress);
+  const PontisContract = usePontisContract();
+  
+  useEffect(() => {
+    if (PontisContract.listenerCount('Mint') < 1) {
+      PontisContract.on('Mint', onPontisMint);
+    }
+  },[chainId, account])
+  
+  const onPontisMint = (coinAddress, amount, receiverAddress, tx) => {
+    console.log('Minted');
+  }
 
-  // useEffect(() => {
-  //   todo();
-  // },[])
+  const submitClaim = async (event, claim: TokenClaim) => {
+    const tx = await PontisContract.mint(chainId, phoTokenAddresses.get(chainId), claim.amount, account); 
+
+    await tx.wait();
+  }
 
   let currentClaims = pendingClaims.get(account); 
   if (currentClaims != null && currentClaims.length > 0) {
@@ -40,7 +52,7 @@ const PendingClaims = () => {
                     <tr key={i}>
                       <td>{c.nativeToken}</td>
                       <td>{c.amount}</td>
-                      <td><button type="button">Claim</button></td>
+                      <td><button onClick={e => submitClaim(e, c)}>Claim</button></td>
                     </tr>
                   );
                 })

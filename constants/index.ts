@@ -17,18 +17,18 @@
 
   // Network chain ids
   export const supportedMetamaskNetworks = [1, 3, 4]; //, 5, 42];
-
+  
   // todo env variables - dotenv package
   export const phoTokenAddresses: Map<number, string> = new Map<number, string>([
     [1, "naaaah, too expensive!!!"], // Ethereum
-    [3, "0xD43DaA155e54C103B10f9588179339651Cb5d0fF"], // Ropsten
-    [4, "0xcFDb1BE3D7afbcdf99dD54dAE43819Ed686B98B8"]  // Rinkeby
+    [3, "0xaCB393e3d25084756Dc960D43e875935523715cD"], // Ropsten
+    [4, "0x5D28f93d55ED0EE7A0f8003c3E96fa9Fc3a7FB07"]  // Rinkeby
   ]);
 
   export const pontisAddresses: Map<number, string> = new Map<number, string>([
     [1, "nope"], // Ethereum
-    [3, "0x884a33dA3Fd4164b1c3a9FB0509b7ba75eF2F95b"], // Ropsten
-    [4, "0x0f5cf0f68b8F94dB239bc43Cc18a35fe83243541"]  // Rinkeby
+    [3, "0x91a69797aaB570Ba197b407f38e5836F9eEA7Dda"], // Ropsten
+    [4, "0xDEE88d652026EFeF17BfeEd36997188aeFfCE40F"]  // Rinkeby
   ]);
   
   // TODO - move to local storage!!!
