@@ -36,7 +36,7 @@ const PontisLibrary = () => {
     }
 
     // TODO - use BigNumber amount???
-    claims.push(new TokenClaim(targetChainId, coinAddress, amount.toNumber()));
+    claims.push(new TokenClaim(targetChainId, coinAddress, amount.toNumber(), tx.transactionHash));
   }
 
   const getCurrentBalance = async () => {
@@ -58,7 +58,7 @@ const PontisLibrary = () => {
       value:    ethers.utils.parseEther('0.0000000000000001'),
       gasLimit: 85000,
       //gasPrice: 1000000000 
-    }); 
+    });
 
     await tx.wait();
     resetForm();
