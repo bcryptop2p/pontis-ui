@@ -6,6 +6,7 @@ import NativeCurrencyBalance from "../components/NativeCurrencyBalance";
 import TokenBalance from "../components/TokenBalance";
 import PontisLibrary from "../components/PontisLibrary";
 import PendingClaims from "../components/PendingClaims";
+import WrappedTokens from "../components/WrappedTokens";
 import { phoTokenAddresses } from "../constants";
 import useEagerConnect from "../hooks/useEagerConnect";
 
@@ -26,7 +27,7 @@ function Home() {
       <header>
         <nav>
           <Link href="/">
-            <a>LimeAcademy-boilerplate</a>
+            <a>Pontis - EVN Token Bridge</a>
           </Link>
 
           <Account triedToEagerConnect={triedToEagerConnect} />
@@ -47,6 +48,7 @@ function Home() {
 
             <TokenBalance tokenAddress={phoTokenAddresses.get(chainId)} symbol="PHO" />
             <PendingClaims />
+            <WrappedTokens />
             <PontisLibrary />
           </section>
         )}
