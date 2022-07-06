@@ -45,8 +45,10 @@ function Home() {
         {isConnected && (
           <section>
             <NativeCurrencyBalance />
-
-            <TokenBalance tokenAddress={phoTokenAddresses.get(chainId)} symbol="PHO" />
+            <p>
+              PHO Balance: 
+              <TokenBalance tokenAddress={phoTokenAddresses.get(chainId)} />
+            </p>
             <PendingClaims />
             <WrappedTokens />
             <PontisLibrary />
