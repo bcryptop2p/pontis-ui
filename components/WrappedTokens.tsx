@@ -5,6 +5,8 @@ import { Pontis } from "../'./contracts/types'";
 import usePontisContract from "../hooks/usePontisContract";
 import useTokenBalance from "../hooks/useTokenBalance";
 import { parseBalance } from "../util";
+import TokenBalance from "../components/TokenBalance";
+import { phoTokenAddresses } from "../constants";
 
 type TokenInfo = {
   chainId: number;
@@ -13,7 +15,7 @@ type TokenInfo = {
   //symbol: string;
 };
 
-const TokenBalance = () => {
+const WrappedTokenBalance = () => {
   const { chainId, account, library } = useWeb3React<Web3Provider>();
   const PontisContract = usePontisContract();
 
@@ -61,7 +63,11 @@ const TokenBalance = () => {
                 return (
                   <tr key={i}>
                     <td>{t.wrappedTokenAddress}</td>
-                    <td>TODO</td>
+                    <td>
+                      {(
+                         <TokenBalance tokenAddress={t.wrappedTokenAddress} />
+                      )}
+                    </td>
                     <td>{t.chainId}</td>
                     <td>{t.tokenAddress}</td>
                     <td><button onClick={e => unwrapToken(e, t)}>Unwrap</button></td>
@@ -89,4 +95,4 @@ const TokenBalance = () => {
   );
 };
 
-export default TokenBalance;
+export default WrappedTokenBalance;
