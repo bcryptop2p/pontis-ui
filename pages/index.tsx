@@ -44,9 +44,9 @@ function Home() {
               PHO Balance: 
               <TokenBalance tokenAddress={phoTokenAddresses.get(chainId)} />
             </p>
+            <PontisLibrary />
             <PendingClaims />
             <WrappedTokens />
-            <PontisLibrary />
           </section>
         )}
       </main>

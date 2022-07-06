@@ -1,9 +1,8 @@
 import { Provider, Web3Provider } from "@ethersproject/providers";
+import { formatUnits } from "@ethersproject/units";
 import { useWeb3React } from "@web3-react/core";
-import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { metaMaskNetworks, pendingClaims, phoTokenAddresses } from "../constants";
-import usePhoboCoinContract from "../hooks/usePhoboCoinContract";
 import usePontisContract from "../hooks/usePontisContract"; 
 import { TokenClaim } from "../models/token-claim";
 
@@ -56,7 +55,7 @@ const PendingClaims = () => {
               <tr>
                 <th>Native Token</th>
                 <th>Amount</th>
-                <th>Tx Hash</th>
+                <th>Transaction Hash</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -69,7 +68,7 @@ const PendingClaims = () => {
                   return (
                     <tr key={i}>
                       <td>{c.nativeToken}</td>
-                      <td>{c.amount}</td>
+                      <td>{ parseFloat(formatUnits(c.amount, 18)).toFixed(18) }</td>
                       <td>{c.transactionHash}</td>
                       <td><button onClick={e => submitClaim(e, c)}>Claim</button></td>
                     </tr>

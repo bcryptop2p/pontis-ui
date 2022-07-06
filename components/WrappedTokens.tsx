@@ -50,7 +50,7 @@ const WrappedTokenBalance = () => {
             <tr>
               <th>Wrapped Token</th>
               <th>Amount</th>
-              <th>Native ChainId</th>
+              <th>Native Chain ID</th>
               <th>Native Token</th>
               <th>Action</th>
             </tr>
@@ -114,12 +114,6 @@ const WrappedTokenBalance = () => {
     );
   };
 
-  // return (
-  //   // <p>
-  //   //   {`${symbol} Balance`}: {parseBalance(data ?? 0)}
-  //   // </p>
-  // );
-  
   return (
     <p>No Wrapped Tokens</p>
   );
