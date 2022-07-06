@@ -88,7 +88,7 @@ const PendingClaims = () => {
   
   return (
     <p>No Pending Claims</p>
-  );  
+  );
 }
 
 export default PendingClaims;
