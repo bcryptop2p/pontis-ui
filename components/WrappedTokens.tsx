@@ -44,7 +44,7 @@ const WrappedTokenBalance = () => {
   if (wrappedTokensInfo != null && wrappedTokensInfo.length > 0) {
     return (
       <div>
-        <table>
+        <table className="wrapped-tokens-table">
           <caption>Wrapped Tokens</caption>
           <thead>
             <tr>
@@ -78,7 +78,37 @@ const WrappedTokenBalance = () => {
           </tbody>
         </table>
       <style jsx>{`
-          
+        .wrapped-tokens-table {
+          border-collapse: collapse;
+          margin: 25px auto;
+          min-width: 90%;
+        }
+
+        .wrapped-tokens-table caption {
+          background: #eee;
+          color: #003080;
+          font-weight: bolder;
+          padding: 10px;
+        }
+
+        .wrapped-tokens-table thead tr {
+          background-color: #003080;
+          color: #fff;
+          text-align: center;
+        }
+
+        .wrapped-tokens-table th,
+        .wrapped-tokens-table td {
+          padding: 10px 15px;
+        }
+
+        .wrapped-tokens-table tbody tr {
+          border-bottom: 1px solid #ddd;
+        }
+        
+        .wrapped-tokens-table tbody tr:last-of-type {
+          border-bottom: 2px solid #ddd;
+        }
       `}</style>
       </div>
     );

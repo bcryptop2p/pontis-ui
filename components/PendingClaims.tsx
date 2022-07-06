@@ -50,7 +50,7 @@ const PendingClaims = () => {
     return (
       <div>
         <div>
-          <table>
+          <table className="claims-table">
             <caption>Pending Claims</caption>
             <thead>
               <tr>
@@ -80,7 +80,37 @@ const PendingClaims = () => {
           </table>
         </div>
       <style jsx>{`
+          .claims-table {
+            border-collapse: collapse;
+            margin: 25px auto;
+            min-width: 90%;
+          }
+  
+          .claims-table caption {
+            background: #eee;
+            color: #003080;
+            font-weight: bolder;
+            padding: 10px;
+          }
+  
+          .claims-table thead tr {
+            background-color: #003080;
+            color: #fff;
+            text-align: center;
+          }
+  
+          .claims-table th,
+          .claims-table td {
+            padding: 10px 15px;
+          }
+  
+          .claims-table tbody tr {
+            border-bottom: 1px solid #ddd;
+          }
           
+          .claims-table tbody tr:last-of-type {
+            border-bottom: 2px solid #ddd;
+          }
       `}</style>
       </div>
     );

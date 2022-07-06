@@ -35,12 +35,7 @@ function Home() {
       </header>
 
       <main>
-        <h1>
-          Welcome to{" "}
-          <a href="https://github.com/LimeChain/next-web3-boilerplate">
-            LimeAcademy-boilerplate
-          </a>
-        </h1>
+        <h1>Pontis</h1>
 
         {isConnected && (
           <section>
