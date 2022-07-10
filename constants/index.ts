@@ -33,3 +33,4 @@ export const pontisAddresses: Map<number, string> = new Map<number, string>([
 
 // TODO - move to local storage!!!
 export var pendingClaims: Map<string, TokenClaim[]> = new Map<string, TokenClaim[]>();
+export var pendingNativeClaims: Map<string, TokenClaim[]> = new Map<string, TokenClaim[]>();

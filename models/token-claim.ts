@@ -1,6 +1,6 @@
 export class TokenClaim {
   targetChainId: number;
-  //nativeChainId: number;
+  nativeChainId: number;
   nativeToken: string;
   
   // TODO - use BigNumber amount???
@@ -9,13 +9,13 @@ export class TokenClaim {
 
   constructor(
     targetChainId: number,
-    //nativeChainId: number,
+    nativeChainId: number,
     nativeToken: string,
     amount: number,
     transactionHash: string) {
 
     this.targetChainId = targetChainId;
-    //this.nativeChainId = nativeChainId;
+    this.nativeChainId = nativeChainId;
     this.nativeToken = nativeToken;
     this.amount = amount;
     this.transactionHash = transactionHash;

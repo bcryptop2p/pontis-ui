@@ -9,6 +9,7 @@ import PendingClaims from "../components/PendingClaims";
 import WrappedTokens from "../components/WrappedTokens";
 import { phoTokenAddresses } from "../constants";
 import useEagerConnect from "../hooks/useEagerConnect";
+import PendingNativeClaims from "../components/PendingNativeClaims";
 
 function Home() {
   const { account, library, chainId } = useWeb3React();
@@ -45,8 +46,9 @@ function Home() {
               <TokenBalance tokenAddress={phoTokenAddresses.get(chainId)} />
             </p>
             <PontisLibrary />
-            <PendingClaims />
             <WrappedTokens />
+            <PendingNativeClaims />
+            <PendingClaims />
           </section>
         )}
       </main>

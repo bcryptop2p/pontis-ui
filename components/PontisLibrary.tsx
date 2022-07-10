@@ -36,7 +36,7 @@ const PontisLibrary = () => {
     }
 
     // TODO - use BigNumber amount???
-    claims.push(new TokenClaim(targetChainId, coinAddress, amount.toNumber(), tx.transactionHash));
+    claims.push(new TokenClaim(targetChainId, chainId, coinAddress, amount.toNumber(), tx.transactionHash));
   }
 
   const getCurrentBalance = async () => {

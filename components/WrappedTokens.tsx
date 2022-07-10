@@ -1,12 +1,12 @@
 import type { Web3Provider } from "@ethersproject/providers";
+import { Contract } from "@ethersproject/contracts";
 import { useWeb3React } from "@web3-react/core";
-import { SetStateAction, useEffect, useState } from "react";
-import { Pontis } from "../'./contracts/types'";
+import { useEffect, useState } from "react";
 import usePontisContract from "../hooks/usePontisContract";
-import useTokenBalance from "../hooks/useTokenBalance";
-import { parseBalance } from "../util";
 import TokenBalance from "../components/TokenBalance";
-import { phoTokenAddresses } from "../constants";
+import { metaMaskNetworks, pendingNativeClaims } from "../constants";
+import { TokenClaim } from "../models/token-claim";
+import ERC20_ABI from "../contracts/ERC20.json";
 
 type TokenInfo = {
   chainId: number;
@@ -22,23 +22,57 @@ const WrappedTokenBalance = () => {
   const [wrappedTokensInfo, setWrappedTokensInfo] = useState<TokenInfo[]>([]);
 
   useEffect(() => {
-    let tokens = PontisContract.getWrappedTokens()
-      .then(tokens => {
-        setWrappedTokensInfo(tokens);
-      });
+    loadWrappedTokens();
+
+    PontisContract.on('Burn', onPontisBurn);
+    PontisContract.on('Mint', onPontisMint);
+
+    return () => { 
+      PontisContract.off('Burn', onPontisBurn);
+      PontisContract.off('Mint', onPontisMint);
+    };
   },[chainId, account])
 
-  const unwrapToken = async (event, token: TokenInfo) => {
-    // const tx = await PontisContract.burn(
-    //   chainId, 
-    //   phoTokenAddresses.get(chainId), 
-    //   'WrappedPhoboCoin',
-    //   'wPHO',
-    //   claim.amount, 
-    //   account, 
-    //   claim.transactionHash); 
+  const loadWrappedTokens = () => {
+    console.log('loading WrappedTokens info');
+    let tokens = PontisContract.getWrappedTokens()
+      .then(tokens => {
+        console.log('WrappedTokens info loaded');
+        setWrappedTokensInfo([]); // temp hack - otherwise the component wouldn't re-render
+        setWrappedTokensInfo(tokens);
+      });
+  }
 
-    // await tx.wait();
+  
+  const onPontisBurn = (function(this: {wrappedTokensInfo: TokenInfo[]}, token, amount, receiver, transactionHash, tx) {
+    let claims = pendingNativeClaims.get(receiver);
+    if (!claims) {
+      claims = [];
+      pendingNativeClaims.set(receiver, claims);
+    }
+
+    let { chainId, tokenAddress } = wrappedTokensInfo.find(t => t.wrappedTokenAddress == token);
+
+    // TODO - use BigNumber amount???
+    claims.push(new TokenClaim(0, chainId, tokenAddress, amount.toNumber(), tx.transactionHash));
+  }).bind({wrappedTokensInfo: wrappedTokensInfo});
+
+  const onPontisMint = (coinAddress, amount, receiverAddress, transactionHash, tx) => {
+    loadWrappedTokens();
+  }
+
+  const unwrapToken = async (event, token: TokenInfo, amount: number) => {
+    let erc20 = new Contract(token.wrappedTokenAddress, ERC20_ABI, library.getSigner(account));
+    await erc20.approve(PontisContract.address, amount);
+
+    let transactionHash = ""; // TODO - omit transactionHash on burn????
+
+    const tx = await PontisContract.burn(token.wrappedTokenAddress, amount, account, transactionHash, {
+      //value: ethers.utils.parseEther('0.0000000000000001'),
+      gasLimit: 500000
+    }); 
+
+    await tx.wait();
   }
   
   if (wrappedTokensInfo != null && wrappedTokensInfo.length > 0) {
@@ -49,28 +83,37 @@ const WrappedTokenBalance = () => {
           <thead>
             <tr>
               <th>Wrapped Token</th>
-              <th>Amount</th>
-              <th>Native Chain ID</th>
+              <th>Balance</th>
+              <th>Native Chain</th>
               <th>Native Token</th>
+              <th>Amount to Unwrap</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
           {
             wrappedTokensInfo
-              .map((t, i) =>
-              {
+              .map((t, i) => {
+
+                let amountToUnwrap = 0;
+                const amountToUnwrapChange = (input) => {
+                  amountToUnwrap = input.target.value;
+                }
+
                 return (
                   <tr key={i}>
                     <td>{t.wrappedTokenAddress}</td>
                     <td>
-                      {(
-                         <TokenBalance tokenAddress={t.wrappedTokenAddress} />
-                      )}
+                      <TokenBalance tokenAddress={t.wrappedTokenAddress} />
                     </td>
-                    <td>{t.chainId}</td>
+                    <td>{metaMaskNetworks.get(t.chainId)}</td>
                     <td>{t.tokenAddress}</td>
-                    <td><button onClick={e => unwrapToken(e, t)}>Unwrap</button></td>
+                    <td>
+                      <input onChange={amountToUnwrapChange} type="number" name="amountToUnwrap" />
+                    </td>
+                    <td>
+                      <button onClick={e => unwrapToken(e, t, amountToUnwrap)}>Unwrap</button>
+                    </td>
                   </tr>
                 );
               })
