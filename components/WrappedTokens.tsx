@@ -7,13 +7,7 @@ import TokenBalance from "../components/TokenBalance";
 import { metaMaskNetworks, pendingNativeClaims } from "../constants";
 import { TokenClaim } from "../models/token-claim";
 import ERC20_ABI from "../contracts/ERC20.json";
-
-type TokenInfo = {
-  chainId: number;
-  tokenAddress: string;
-  wrappedTokenAddress: string;
-  //symbol: string;
-};
+import { TokenInfo } from "../models/token-info";
 
 const WrappedTokenBalance = () => {
   const { chainId, account, library } = useWeb3React<Web3Provider>();
@@ -40,23 +34,23 @@ const WrappedTokenBalance = () => {
         console.log('WrappedTokens info loaded');
         setWrappedTokensInfo([]); // temp hack - otherwise the component wouldn't re-render
         setWrappedTokensInfo(tokens);
+        //wrappedTokens.set(chainId, tokens);
       });
   }
 
-  
-  const onPontisBurn = (function(this: {wrappedTokensInfo: TokenInfo[]}, token, amount, receiver, transactionHash, tx) {
+  const onPontisBurn = function(token, amount, receiver, nativeChainId, nativeToken, transactionHash, tx) {
     let claims = pendingNativeClaims.get(receiver);
     if (!claims) {
       claims = [];
       pendingNativeClaims.set(receiver, claims);
     }
 
-    let { chainId, tokenAddress } = wrappedTokensInfo.find(t => t.wrappedTokenAddress == token);
-
     // TODO - use BigNumber amount???
-    claims.push(new TokenClaim(0, chainId, tokenAddress, amount.toNumber(), tx.transactionHash));
-  }).bind({wrappedTokensInfo: wrappedTokensInfo});
+    claims.push(new TokenClaim(0, nativeChainId, nativeToken, amount.toNumber(), tx.transactionHash));
 
+    loadWrappedTokens();
+  };
+  
   const onPontisMint = (coinAddress, amount, receiverAddress, transactionHash, tx) => {
     loadWrappedTokens();
   }
@@ -102,12 +96,14 @@ const WrappedTokenBalance = () => {
 
                 return (
                   <tr key={i}>
-                    <td>{t.wrappedTokenAddress}</td>
+                    {/* <td>{t.wrappedTokenAddress}</td> */}
+                    <td>wPHO</td>
                     <td>
                       <TokenBalance tokenAddress={t.wrappedTokenAddress} />
                     </td>
                     <td>{metaMaskNetworks.get(t.chainId)}</td>
-                    <td>{t.tokenAddress}</td>
+                    {/* <td>{t.tokenAddress}</td> */}
+                    <td>PHO</td>
                     <td>
                       <input onChange={amountToUnwrapChange} type="number" name="amountToUnwrap" />
                     </td>

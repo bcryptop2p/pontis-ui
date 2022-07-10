@@ -22,6 +22,18 @@
       },
       {
         "indexed": false,
+        "internalType": "uint8",
+        "name": "nativeChainId",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "nativeToken",
+        "type": "address"
+      },
+      {
+        "indexed": false,
         "internalType": "string",
         "name": "transactionHash",
         "type": "string"

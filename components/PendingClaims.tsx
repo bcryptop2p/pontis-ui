@@ -33,8 +33,8 @@ const PendingClaims = () => {
 
   const submitClaim = async (event, claim: TokenClaim) => {
     const tx = await PontisContract.mint(
-      claim.nativeChainId,  //chainId, 
-      phoTokenAddresses.get(chainId), 
+      claim.nativeChainId, 
+      phoTokenAddresses.get(claim.nativeChainId), 
       'WrappedPhoboCoin',
       'wPHO',
       claim.amount, 

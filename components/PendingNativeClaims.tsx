@@ -32,11 +32,10 @@ const PendingNativeClaims = () => {
   }
 
   const submitClaim = async (event, claim: TokenClaim) => {
-    const tx = await PontisContract.unlock(
-      claim.nativeToken, //phoTokenAddresses.get(chainId), 
-      claim.amount, 
-      account, 
-      claim.transactionHash); 
+    const tx = await PontisContract.unlock(claim.nativeToken, claim.amount, account, claim.transactionHash, {
+        //value: ethers.utils.parseEther('0.0000000000000001'),
+        gasLimit: 500000
+      }); 
 
     await tx.wait();
   }
@@ -59,7 +58,7 @@ const PendingNativeClaims = () => {
             <tbody>
             {
               currentClaims
-                .filter(c => c.targetChainId == chainId)
+                .filter(c => c.nativeChainId == chainId)
                 .map((c,i) =>
                 {
                   return (
